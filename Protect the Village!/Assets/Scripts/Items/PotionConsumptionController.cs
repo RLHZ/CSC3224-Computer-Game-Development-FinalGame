@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PotionConsumptionController : MonoBehaviour
 {
-    public int healthPotionValue = 20;
+    public int healthPotionValue = 30;
     PlayerStats stats;
 
     void Awake() {
@@ -13,7 +13,7 @@ public class PotionConsumptionController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.G) && !GameController.isFinished)
             ConsumeHealthPotion();
     }
 

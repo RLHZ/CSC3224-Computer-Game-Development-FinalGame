@@ -46,9 +46,10 @@ public class CharacterStats : MonoBehaviour {
         if (isBuilding)
             buildingController.GetHit();
         else
-            characterController.GetHit();
+            characterController.GetHit(damage);
 
         if (currentHealth <= 0) {
+            currentHealth = 0;
             Die();
         }
     }

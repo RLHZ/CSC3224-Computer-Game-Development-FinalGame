@@ -24,6 +24,10 @@ public class EnemyController : AttackingCharacterController {
     public AudioClip skeletonHit;
 
     public List<GameObject> pickupObjects;
+
+    bool isFocus = false;
+
+    private List<GoodCharacterController> charactersAttackingThis = new List<GoodCharacterController>();
     
     protected override void Awake() {
         base.Awake();
@@ -93,7 +97,13 @@ public class EnemyController : AttackingCharacterController {
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
+    public void OnFocused(GoodCharacterController character) {
+        charactersAttackingThis.Add(character);
+    }
 
+    public void OnDefocused(GoodCharacterController character) {
+        charactersAttackingThis.Remove(character);
+    }
 
 
     void OnDrawGizmosSelected() {
@@ -103,8 +113,13 @@ public class EnemyController : AttackingCharacterController {
 
     public override void Die() {
         if (isAlive) {
+            foreach (GoodCharacterController character in charactersAttackingThis ) {
+                character.EnemyTargetDied();
+            }
+            charactersAttackingThis.Clear();
             isAlive = false;
             GetComponent<CapsuleCollider>().enabled = false;
+            Destroy(agent);
             base.Die();
             SpawnPickupObjects();
             GameSettings.BadGuys.Remove(transform);
@@ -123,7 +138,8 @@ public class EnemyController : AttackingCharacterController {
         }
     }
 
-    public override void GetHit() {
+    public override void GetHit(int damage) {
+        base.GetHit(damage);
         audioSource.PlayOneShot(skeletonHit);
     }
 
@@ -136,6 +152,6 @@ public class EnemyController : AttackingCharacterController {
         else
             objectToSpawn = pickupObjects[0];
 
-        Instantiate(objectToSpawn, transform.position, transform.rotation);
+        Instantiate(objectToSpawn, transform.position + new Vector3(1,0,0), transform.rotation);
     }
 }

@@ -6,6 +6,6 @@ public class CoinController : PickupObject
 {
     public override void OnTriggerEnter(Collider collider) {
         base.OnTriggerEnter(collider);
-        GameController.Instance.AddCoins(Mathf.FloorToInt(Random.Range(1, 5)));
+        GameController.Instance.AddCoins(Mathf.FloorToInt(Random.Range(2, 7)));
     }
 }

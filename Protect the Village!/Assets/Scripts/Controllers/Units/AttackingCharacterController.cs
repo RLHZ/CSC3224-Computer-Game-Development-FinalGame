@@ -34,6 +34,7 @@ public class AttackingCharacterController : AliveCharacterController {
         Destroy(transform.Find("Cube_Healthbar").gameObject);
     }
 
-    public override void GetHit() {
+    public override void GetHit(int damage) {
+        base.GetHit(damage);
     }
 }

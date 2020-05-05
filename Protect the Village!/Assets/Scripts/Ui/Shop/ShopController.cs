@@ -145,8 +145,8 @@ public class ShopController : MonoBehaviour
         else if (totalCost > 0) {
             GameController.Instance.SpendCoins(totalCost);
 
-            playerStats.IncreaseArmour(armourQty * 5);
-            playerStats.IncreaseAttack(attackQty * 5);
+            playerStats.IncreaseArmour(armourQty);
+            playerStats.IncreaseAttack(attackQty * 2);
             GameController.Instance.AddHealthPotions(potionQty);
 
             ResetQty();

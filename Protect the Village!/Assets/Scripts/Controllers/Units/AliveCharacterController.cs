@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AliveCharacterController : MonoBehaviour
 {
+    public GameObject floatingTextPrefab;
     protected Animator anim;
     protected AudioSource audioSource;
     public AudioClip dieSound;
@@ -21,6 +22,14 @@ public class AliveCharacterController : MonoBehaviour
         enabled = false;
     }
 
-    public virtual void GetHit() {
+    public virtual void GetHit(int damage) {
+        if(floatingTextPrefab != null) ShowFloatingText(damage);
+    }
+
+    public bool IsAlive() { return isAlive; }
+
+    private void ShowFloatingText(int damage) {
+        var prefab = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+        prefab.GetComponent<TextMesh>().text = (-damage).ToString();
     }
 }
