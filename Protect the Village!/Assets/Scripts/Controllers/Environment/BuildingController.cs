@@ -18,6 +18,7 @@ public class BuildingController : MonoBehaviour
     void Awake() {
         isAlive = true;
         GameSettings.Buildings.Add(transform);
+        GameController.Instance.UpdateBuildingNumber();
         healthBar = transform.Find("Cube_Healthbar").Find("Canvas").Find("Simple Bar soldier").Find("Status Fill 01 soldier").gameObject.GetComponent<SimpleHealthBar>(); 
         stats = GetComponent<CharacterStats>();
         audioSource = GetComponent<AudioSource>();
@@ -37,6 +38,7 @@ public class BuildingController : MonoBehaviour
 
             ReasignTargetToEnemies();
             GameSettings.Buildings.Remove(transform);
+            GameController.Instance.UpdateBuildingNumber();
 
             audioSource.volume = 1;
             audioSource.PlayOneShot(buildingDie);

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4000013555364002}
   - component: {fileID: 6450379663476990076}
   - component: {fileID: 6505004209869396075}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000010444600384}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 33000012841361078}
   - component: {fileID: 23000013388907530}
   - component: {fileID: 95000012458517520}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 7871408244548488973}
   - component: {fileID: 7803317668504536452}
   - component: {fileID: 8064197711690821440}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: StarsParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4922,7 +4922,7 @@ GameObject:
   - component: {fileID: 8360229220863874316}
   - component: {fileID: 3109796555876668487}
   - component: {fileID: 7214756713989916795}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GlowParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}

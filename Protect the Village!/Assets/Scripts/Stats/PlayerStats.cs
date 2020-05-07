@@ -26,6 +26,9 @@ public class PlayerStats : CharacterStats
 
     public void IncreaseHealthByPotion(int healthPotionValue) {
         IncreaseHealth(healthPotionValue);
-        GameController.Instance.uiController.UpdatePlayerHealth(currentHealth, maxHealth);
+        if (GameController.Instance.isInTutorial)
+            TutorialController.Instance.uiController.UpdatePlayerHealth(currentHealth, maxHealth);
+        else
+            GameController.Instance.uiController.UpdatePlayerHealth(currentHealth, maxHealth);
     }
 }

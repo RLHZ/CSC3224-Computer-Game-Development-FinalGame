@@ -13,6 +13,7 @@ public class ShopController : MonoBehaviour
 
     public int maxArmourAvailable = 9;
     public int maxAttackAvailable = 23;
+    public int maxAlliesAlive = 3;
 
     public int potionCost;
     public int armourCost;
@@ -38,6 +39,7 @@ public class ShopController : MonoBehaviour
 
     public Text armourLeftText;
     public Text attackLeftText;
+    public Text allyMaxText;
 
     private int totalArmourBought;
     private int totalAttackBought;
@@ -64,11 +66,13 @@ public class ShopController : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab)) {
-            if (!isShopOpen && !GameController.isPaused && !GameController.isFinished) {
+            if (TutorialController.DoIfTutorial(TutorialController.Tutorial_State.OpenShop) && !isShopOpen && !GameController.isPaused && !GameController.isFinished) {
                 OpenShopWindow();
+                if (GameController.Instance.isInTutorial)
+                    TutorialController.Instance.OpenShopDone();
             }
-            else if (isShopOpen) {
-                CloseShopWindow();
+            else if (TutorialController.DoIfTutorial(TutorialController.Tutorial_State.CloseShop) && isShopOpen) {
+                CloseShopWindow();                
             }
         }
 
@@ -98,6 +102,9 @@ public class ShopController : MonoBehaviour
     }
 
     public void CloseShopWindow() {
+        if (GameController.Instance.isInTutorial)
+            TutorialController.Instance.CloseShopDone();
+
         Time.timeScale = 1;
         GameController.isPaused = false;
         canvas.SetActive(false);
@@ -119,7 +126,8 @@ public class ShopController : MonoBehaviour
                     attackQty++;
                 break;
             case BuyableItems.Ally:
-                allyQty++;
+                if (GetNumberAllies() + allyQty + 1 <= maxAlliesAlive)
+                    allyQty++;
                 break;
         }
         warning.SetActive(false);
@@ -155,6 +163,7 @@ public class ShopController : MonoBehaviour
 
         armourLeftText.text = "(" + (maxArmourAvailable - armourQty - totalArmourBought) + " Left)";
         attackLeftText.text = "(" + (maxAttackAvailable - attackQty - totalAttackBought) + " Left)";
+        allyMaxText.text = "(Alive:  " + GetNumberAllies() + ", Max:  " + maxAlliesAlive + ")";
     }
 
     private void CalculateTotal() {
@@ -176,9 +185,10 @@ public class ShopController : MonoBehaviour
             playerStats.IncreaseAttack(attackQty * 2);
             GameController.Instance.AddHealthPotions(potionQty);
 
-            if (allyQty > 0)
+            if (allyQty > 0) { 
                 GameController.Instance.SpawnAllies(allyQty);
-
+                GameController.Instance.UpdateAllies();
+            }
             //Spawn x number of enemies 
 
             totalArmourBought += armourQty;
@@ -189,5 +199,9 @@ public class ShopController : MonoBehaviour
 
             warning.SetActive(false);
         }
+    }
+
+    private int GetNumberAllies() {
+            return GameSettings.allies.Count;
     }
 }

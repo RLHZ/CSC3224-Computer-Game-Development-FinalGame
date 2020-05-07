@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     public GameObject menuCanvas;
     public GameObject tutorialWelcomeCanvas;
     public GameObject generalUICanvas;
+    public GameObject tutorialUICanvas;
 
     public GameObject tutorialTimeline;
     public GameObject attackTimeline;
@@ -30,7 +31,7 @@ public class GameController : MonoBehaviour
     private float gameTimer;
 
     public int coinsAvailable = 0;//{ get; set; }
-    public int healthPotionsAvailable { get; private set; }
+    public int healthPotionsAvailable { get;  set; }
     int staminaPotionsAvailable;
 
     public GameAmbientSoundController soundController;
@@ -40,10 +41,11 @@ public class GameController : MonoBehaviour
 
     private static bool isFirstTimePlaying = true;
     public bool isInTutorial = false;
+    private static bool isChoiceMade = false;
     public TutorialController tutorialController;
 
     public static GameController Instance;
-    void Awake() {     
+    void Awake() {
         Time.timeScale = 1;
         menuCanvas.SetActive(false);
         endGameCanvas.SetActive(false);
@@ -61,7 +63,8 @@ public class GameController : MonoBehaviour
         allySpawner = GetComponent<AllySpawner>();
         uiController.UpdateCoinNumber(coinsAvailable);
         uiController.UpdateHealthPotionsNumber(healthPotionsAvailable);
-        tutorialCamera.GetComponent<AudioListener>().enabled = false;
+        uiController.UpdateAllyNumber();
+        tutorialCamera.GetComponent<AudioListener>().enabled = false;        
 
         if (isFirstTimePlaying) {
             Time.timeScale = 0;
@@ -71,9 +74,20 @@ public class GameController : MonoBehaviour
             generalUICanvas.SetActive(false);
         }
         else {
-            soundController.PlayGameMusic();
+            Time.timeScale = 1;
+            isPaused = false;
+            isInTutorial = false;
+            tutorialWelcomeCanvas.SetActive(false);
+            generalUICanvas.SetActive(true);            
         }
-        
+
+
+    }
+
+    void Start() {
+        soundController = GetComponent<GameAmbientSoundController>();
+        if(!isFirstTimePlaying && isChoiceMade == true)
+            soundController.PlayGameMusic();
     }
 
 
@@ -112,6 +126,13 @@ public class GameController : MonoBehaviour
         isPaused = false;
     }
 
+    public void EndTutorial() {
+        tutorialUICanvas.SetActive(false);
+        generalUICanvas.SetActive(true);
+        isInTutorial = false;
+        RestartGame();
+    }
+
     public void SkipTutorial() {
         Time.timeScale = 1;
         isPaused = false;
@@ -119,6 +140,7 @@ public class GameController : MonoBehaviour
         tutorialWelcomeCanvas.SetActive(false);
         generalUICanvas.SetActive(true);
         soundController.PlayGameMusic();
+        isChoiceMade = true;
     }
 
     public void PlayTutorial() {
@@ -131,6 +153,7 @@ public class GameController : MonoBehaviour
         tutorialTimeline.SetActive(true);
         tutorialController.StartTutorial();
         soundController.PlayTutorialMusic();
+        isChoiceMade = true;
     }
 
     void UpdateTimer() {
@@ -158,6 +181,14 @@ public class GameController : MonoBehaviour
         uiController.UpdateCoinNumber(coinsAvailable);
     }
 
+    public void UpdateAllies() {
+        uiController.UpdateAllyNumber();
+    }
+
+    public void UpdateBuildingNumber() {
+        uiController.UpdateBuildingNumber();
+    }
+
     public void AddPotion() {
         healthPotionsAvailable++;
         uiController.UpdateHealthPotionsNumber(healthPotionsAvailable);
@@ -168,6 +199,13 @@ public class GameController : MonoBehaviour
             healthPotionsAvailable--;
             uiController.UpdateHealthPotionsNumber(healthPotionsAvailable);
         }
+    }
+
+    public void SetHealthPotions(int n) {
+        healthPotionsAvailable = n;
+    }
+    public void SetCoins(int n) {
+        coinsAvailable = n;
     }
 
     public void ShowMenu() {
@@ -194,4 +232,10 @@ public class GameController : MonoBehaviour
     public void SpawnAllies(int count) {
         allySpawner.SpawnAllies(count);
     }
+
+    public void ShowTutorialUI() {
+        tutorialUICanvas.SetActive(true);
+    }
+
+
 }

@@ -26,6 +26,7 @@ public class AllyController : AttackingCharacterController {
             agent.SetDestination(enemyTarget.transform.position);
 
         GameSettings.GoodGuys.Add(transform);
+        GameSettings.allies.Add(transform);
     }
 
         // Update is called once per frame
@@ -85,6 +86,8 @@ public class AllyController : AttackingCharacterController {
             Destroy(agent);
             base.Die();
             GameSettings.GoodGuys.Remove(transform);
+            GameSettings.allies.Remove(transform);
+            GameController.Instance.UpdateAllies();
             Destroy(gameObject, destroyTime);
         }
     }

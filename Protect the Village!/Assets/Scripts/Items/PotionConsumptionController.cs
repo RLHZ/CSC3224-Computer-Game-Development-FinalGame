@@ -17,8 +17,11 @@ public class PotionConsumptionController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G) && !GameController.isFinished)
+        if (TutorialController.DoIfTutorial(TutorialController.Tutorial_State.Heal) && (!GameController.Instance.isInTutorial || TutorialController.Instance.isWaitingforG) && Input.GetKeyDown(KeyCode.G) && !GameController.isFinished) {
+            if (GameController.Instance.isInTutorial)
+                TutorialController.Instance.HealingDone();
             ConsumeHealthPotion();
+        }
     }
 
     void ConsumeHealthPotion() {
@@ -28,7 +31,10 @@ public class PotionConsumptionController : MonoBehaviour
             prefab.GetComponent<TextMesh>().text = message;            
 
             stats.IncreaseHealthByPotion(healthPotionValue);
-            GameController.Instance.RemovePotion();
+            if (GameController.Instance.isInTutorial)
+                TutorialController.Instance.uiController.UpdateHealthPotionsNumber(0);
+            else
+                GameController.Instance.RemovePotion();
             
         }
     }

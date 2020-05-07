@@ -40,4 +40,18 @@ public class RestartButtonHandler : MonoBehaviour
     public void PlayTutorial() {
         GameController.Instance.PlayTutorial();
     }
+
+    public void Tutorial1Done() {
+        TutorialController.Instance.HealDone(1);
+    }
+    public void Tutorial2Done() {
+        TutorialController.Instance.HealDone(2);
+    }
+    public void Tutorial3Done() {
+        TutorialController.Instance.HealDone(3);
+    }
+
+    public void EndTutorial() {
+        TutorialController.Instance.EndTutorial();
+    }
 }

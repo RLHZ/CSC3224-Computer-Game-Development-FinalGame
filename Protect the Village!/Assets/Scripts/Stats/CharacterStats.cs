@@ -3,7 +3,7 @@
 public class CharacterStats : MonoBehaviour {
 
     public int maxHealth = 100;
-    public int currentHealth { get; private set; }
+    public int currentHealth { get;  set; }
 
     public Stat damage;
     public Stat armour;
@@ -41,7 +41,8 @@ public class CharacterStats : MonoBehaviour {
         damage -= armour.GetValue();
         damage = Mathf.Clamp(damage, 1, int.MaxValue);
         
-        currentHealth -= damage;
+        if(!GameController.Instance.isInTutorial || (GameController.Instance.isInTutorial && transform.tag != "Player" && transform.tag != "Building"))
+            currentHealth -= damage;
 
         if (isBuilding)
             buildingController.GetHit();

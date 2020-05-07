@@ -11,6 +11,16 @@ public class TutorialController : MonoBehaviour
     public GameObject focusMessage;
     public GameObject attackMessage;
 
+    public GameObject healMessage;
+    public GameObject healMessage2;
+    public GameObject healMessage3;
+    public GameObject healMessage4;
+
+    public GameObject ShopMessage1;
+    public GameObject shopMessage2;
+
+    public GameObject endMessage;
+
     public GameObject attackTimeline;
 
     public Transform player;
@@ -19,6 +29,9 @@ public class TutorialController : MonoBehaviour
     public Camera camera1;
     public Camera camera2;
     public Camera camera3;
+
+    public GameObject tutorialComponents;
+    public UiController uiController;
 
 
     bool isCharacterMoved = false;
@@ -37,10 +50,14 @@ public class TutorialController : MonoBehaviour
     bool isFocuspressed = false;
 
     bool isAttacked = false;
+    bool isEnemiesFound = false;
+
+    public bool isWaitingforG = false;
     bool isHealed = false;
     bool isOpenedShop = false;
 
     int cameraSwitchCount = 0;
+    int enemiesDead = 0;
 
     public static TutorialController Instance;
 
@@ -49,10 +66,13 @@ public class TutorialController : MonoBehaviour
     void Awake() {
         Instance = this;
         tutorialState = Tutorial_State.CutScene;
-        Debug.Log("Calling awake");
+        camera1.GetComponent<AudioListener>().enabled = false;
+        camera2.GetComponent<AudioListener>().enabled = false;
+        camera3.GetComponent<AudioListener>().enabled = false;
+        uiController = tutorialComponents.GetComponent<UiController>();
     }
 
-    public enum Tutorial_State { CutScene, Movement, Zoom, Rotation, Camera, Focus, Attack, Heal, Shop}
+    public enum Tutorial_State { CutScene, Movement, Zoom, Rotation, Camera, Focus, Attack, Heal, OpenShop, CloseShop, EndTutorial}
     public Tutorial_State tutorialState;
 
     // Start is called before the first frame update
@@ -81,10 +101,7 @@ public class TutorialController : MonoBehaviour
                 FocusTutorial();
                 break;
             case Tutorial_State.Attack:
-                break;
-            case Tutorial_State.Heal:
-                break;
-            case Tutorial_State.Shop:
+                AttackTutorial();
                 break;
         }
         
@@ -99,7 +116,7 @@ public class TutorialController : MonoBehaviour
         mainCamera.GetComponent<AudioListener>().enabled = false;
         camera3.GetComponent<AudioListener>().enabled = true;
         //attackMessage.SetActive(true);
-        DebugAssist.Instance.MakeAllImmune();
+        //DebugAssist.Instance.MakeAllImmune();
 
     }
 
@@ -115,13 +132,13 @@ public class TutorialController : MonoBehaviour
     public void SwitchCamera() {
         switch (cameraSwitchCount) {
             case 0:
-                camera1.GetComponent<AudioListener>().enabled = false;
                 camera2.GetComponent<AudioListener>().enabled = true;
+                camera1.GetComponent<AudioListener>().enabled = false;                
                 cameraSwitchCount++;
                 break;
             case 1:
-                camera3.GetComponent<AudioListener>().enabled = false;
                 mainCamera.GetComponent<AudioListener>().enabled = true;
+                camera3.GetComponent<AudioListener>().enabled = false;
                 cameraSwitchCount++;
                 break;
 
@@ -173,16 +190,38 @@ public class TutorialController : MonoBehaviour
                 tutorialState = Tutorial_State.Focus;
                 cameraMessage.SetActive(false);
                 focusMessage.SetActive(true);
+                taskTime = 0;
             }
         }
     }
 
     private void FocusTutorial() {
         if (isFocuspressed) {
-            tutorialState = Tutorial_State.Attack;
-            focusMessage.SetActive(false);
-            StartAttackTutorial();
+            if (taskTime == 0)
+                taskTime = Time.time;
+            if (Time.time - taskTime > 1) {
+                tutorialState = Tutorial_State.Attack;
+                focusMessage.SetActive(false);
+                StartAttackTutorial();
+                taskTime = 0;
+            }
         }
+    }
+
+    private void AttackTutorial() {
+        if(enemiesDead == 2)
+            isAttacked = true;        
+
+        if (isAttacked) {
+            if (taskTime == 0)
+                taskTime = Time.time;
+            if (Time.time - taskTime > 1) {
+                tutorialState = Tutorial_State.Heal;
+                attackMessage.SetActive(false);
+                healMessage.SetActive(true);
+            }
+        } 
+
     }
 
     public void MovementDone() {
@@ -225,13 +264,66 @@ public class TutorialController : MonoBehaviour
         isFocuspressed = true;
     }
 
+    public void HealingDone() {
+        isHealed = true;
+        tutorialState = Tutorial_State.OpenShop;
+        healMessage4.SetActive(false);
+        ShopMessage1.SetActive(true);
+    }
+
+    public void OpenShopDone() {
+        tutorialState = Tutorial_State.CloseShop;
+        ShopMessage1.SetActive(false);
+        shopMessage2.SetActive(true);
+    }
+
+    public void CloseShopDone() {
+        tutorialState = Tutorial_State.EndTutorial;
+        shopMessage2.SetActive(false);
+        endMessage.SetActive(true);
+    }
+
     public static bool DoIfTutorial(TutorialController.Tutorial_State tutorial_State) {
         //Debug.Log(TutorialController.Instance.tutorialState.ToString());
         //Debug.Log(tutorial_State.ToString());
-        return (!GameController.Instance.isInTutorial || (GameController.Instance.isInTutorial && TutorialController.Instance.tutorialState == tutorial_State));
+        return (!GameController.Instance.isInTutorial || 
+            (GameController.Instance.isInTutorial && TutorialController.Instance.tutorialState == tutorial_State) || 
+            (GameController.Instance.isInTutorial && TutorialController.Instance.tutorialState == Tutorial_State.Attack));
     }
 
     public void SpawnEnemy() {
         GameController.Instance.GetComponent<EnemySpawner>().SpawnSingleEnemy();
+    }
+
+    public void HealDone(int n) {
+        GameObject[] messages = { healMessage, healMessage2, healMessage3, healMessage4};
+
+        messages[n-1].SetActive(false);
+        messages[n].SetActive(true);
+
+        switch (n) {
+            case 1:
+                GameController.Instance.SetHealthPotions(1);
+                GameController.Instance.SetCoins(4);
+                player.GetComponent<CharacterStats>().currentHealth = 70;
+                uiController.UpdateCoinNumber(4);
+                uiController.UpdateHealthPotionsNumber(1);
+                uiController.UpdatePlayerHealth(70, 100);
+
+                GameController.Instance.ShowTutorialUI();
+                break;
+            case 3:
+                isWaitingforG = true;
+                break;
+        }
+    }
+
+    public void EndTutorial() {
+        endMessage.SetActive(false);
+        GameController.Instance.EndTutorial();
+    }
+
+    public void EnemyKilled() {
+        enemiesDead++;
     }
 }

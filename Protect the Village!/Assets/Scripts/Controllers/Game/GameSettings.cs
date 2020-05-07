@@ -10,6 +10,8 @@ public class GameSettings : MonoBehaviour
     public static List<Transform> GoodGuys = new List<Transform>();
     public static List<Transform> Buildings = new List<Transform>();
 
+    public static List<Transform> allies = new List<Transform>();
+
     void Awake() {
         instance = this;
     }
@@ -18,6 +20,7 @@ public class GameSettings : MonoBehaviour
         BadGuys = new List<Transform>();
         GoodGuys = new List<Transform>();
         Buildings = new List<Transform>();
+        allies = new List<Transform>();
     }
 
 

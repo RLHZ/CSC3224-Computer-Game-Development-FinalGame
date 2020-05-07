@@ -16,6 +16,9 @@ public class PlayerControllerRigidBody : GoodCharacterController {
 
     private Rigidbody rb;
 
+    public GameObject redFlashHolder;
+    RedFlash redFlash;
+
 
     private Vector3 worldpos;
     private float mouseX;
@@ -43,16 +46,16 @@ public class PlayerControllerRigidBody : GoodCharacterController {
         DontDestroyOnLoad(this.gameObject);
         motor = GetComponent<PlayerMotor>();
         agent = GetComponent<NavMeshAgent>();
+        redFlash = redFlashHolder.GetComponent<RedFlash>();
     }
 
     void Update() {
         if (!GameController.isPaused && !GameController.isFinished) {
-            //Debug.Log("111");
+
             if (TutorialController.DoIfTutorial(TutorialController.Tutorial_State.Movement) && Input.GetMouseButtonDown(0)) {
-                Debug.Log("222");
+
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                Debug.Log("Click");
                 if (Physics.Raycast(ray, out hit)) {
                     if (GameController.Instance.isInTutorial)
                         TutorialController.Instance.MovementDone();
@@ -98,9 +101,7 @@ public class PlayerControllerRigidBody : GoodCharacterController {
         if (!GameController.isPaused && !GameController.isFinished) { 
             float forwardMoveAxis = Input.GetAxis(forwardMoveInputAxis);
             float sidewaysMoveAxis = Input.GetAxis(sidewaysMoveInputAxis);
-
-           // moveSpeed = (true || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) ? initialSpeed * 2 : initialSpeed;
-
+            
             anim.SetBool("IsRunning", agent.remainingDistance > agent.stoppingDistance);
         }
         if (target != null)
@@ -142,7 +143,15 @@ public class PlayerControllerRigidBody : GoodCharacterController {
     public override void GetHit(int damage) {
         base.GetHit(damage);
         audioSource.PlayOneShot(characterHit);
+
+        if (DetermineIfFlashRed())
+            redFlash.FlashScreen();
+
         GameController.Instance.uiController.UpdatePlayerHealth(stats.currentHealth, stats.maxHealth);
+    }
+
+    bool DetermineIfFlashRed() {
+        return stats.currentHealth / (10 - stats.armour.GetValue()) <= 5;
     }
 
    

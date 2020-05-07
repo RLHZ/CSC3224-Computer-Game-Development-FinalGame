@@ -120,17 +120,20 @@ public class EnemyController : AttackingCharacterController {
 
     public override void Die() {
         if (isAlive) {
+            isAlive = false;
             foreach (GoodCharacterController character in charactersAttackingThis ) {
                 character.EnemyTargetDied();
             }
             charactersAttackingThis.Clear();
-            isAlive = false;
             GetComponent<CapsuleCollider>().enabled = false;
             Destroy(agent);
             base.Die();
             SpawnPickupObjects();
             GameSettings.BadGuys.Remove(transform);
             Destroy(gameObject, destroyTime);
+
+            if (GameController.Instance.isInTutorial)
+                TutorialController.Instance.EnemyKilled();
         }
     }
  
