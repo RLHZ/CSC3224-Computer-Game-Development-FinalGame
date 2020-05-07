@@ -11,7 +11,8 @@ public class UiFacingScreen : MonoBehaviour
     void Update()
     {
         camera = Camera.main;
-        transform.LookAt(transform.position + camera.transform.rotation * Vector3.back,
+        if(camera != null)
+            transform.LookAt(transform.position + camera.transform.rotation * Vector3.back,
                             camera.transform.rotation * Vector3.up);
     }
 }

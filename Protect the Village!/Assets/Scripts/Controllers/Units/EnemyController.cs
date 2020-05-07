@@ -21,6 +21,9 @@ public class EnemyController : AttackingCharacterController {
     Transform player;
     NavMeshAgent agent;
 
+    Transform goodGuysTarget;
+    float lastRadiusCheck;
+
     public AudioClip skeletonHit;
 
     public List<GameObject> pickupObjects;
@@ -50,17 +53,21 @@ public class EnemyController : AttackingCharacterController {
 
         //Enemy's Winning condition
         if (!isAllBuildingsDestroyed && !isPlayerDead && !GameController.isFinished) {
-            float playerDistance = Vector3.Distance(player.position, transform.position);
+            if (Time.time - lastRadiusCheck > 1)
+                goodGuysTarget = GetGoodGuysTarget();
 
-            if (playerDistance <= lookRadius && !DebugAssist.Instance.isIgnorePlayer) {
+            
+
+            if (goodGuysTarget != null) {//playerDistance <= lookRadius && !DebugAssist.Instance.isIgnorePlayer) {
                 isAttackingBuilding = false;
+                float enemyDistance = Vector3.Distance(goodGuysTarget.position, transform.position);
 
-                if (agent.destination != player.position) { 
-                    agent.SetDestination(player.position);
+                if (agent.destination != goodGuysTarget.position) { 
+                    agent.SetDestination(goodGuysTarget.position);
                     isNewBuildingTarget = true;
                 }
-                if (playerDistance <= agent.stoppingDistance) {
-                    FaceTarget(player);
+                if (enemyDistance <= agent.stoppingDistance) {
+                    FaceTarget(goodGuysTarget);
                     AttackTarget();
                 }
             }
@@ -153,5 +160,21 @@ public class EnemyController : AttackingCharacterController {
             objectToSpawn = pickupObjects[0];
 
         Instantiate(objectToSpawn, transform.position + new Vector3(1,0,0), transform.rotation);
+    }
+
+    Transform GetGoodGuysTarget() {
+        Transform closestTransform = null;
+        float closestDistance = 100000;
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, lookRadius);
+
+        foreach (Collider collider in hitColliders) {
+            if (!collider.gameObject.tag.Equals("Good") && !collider.gameObject.tag.Equals("Player")) continue;
+            Transform currentTransform = collider.transform;
+            float distance = Vector3.Distance(currentTransform.position, transform.position);
+            if (distance < closestDistance)
+                closestTransform = currentTransform;
+        }
+        lastRadiusCheck = Time.time;
+        return closestTransform;
     }
 }

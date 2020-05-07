@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Good
   - Bad
+  - AllySpawnMarker
   layers:
   - Default
   - TransparentFX

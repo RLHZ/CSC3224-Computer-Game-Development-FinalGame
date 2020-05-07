@@ -13,6 +13,14 @@ public class GameController : MonoBehaviour
     public Text endGameText;
     public GameObject endGameCanvas;
     public GameObject menuCanvas;
+    public GameObject tutorialWelcomeCanvas;
+    public GameObject generalUICanvas;
+
+    public GameObject tutorialTimeline;
+    public GameObject attackTimeline;
+
+    public Camera mainCamera;
+    public Camera tutorialCamera;
 
     public static bool isPaused = false;
     public static bool isFinished = false;
@@ -28,20 +36,44 @@ public class GameController : MonoBehaviour
     public GameAmbientSoundController soundController;
     public AudioClip moneySpent;
 
+    AllySpawner allySpawner;
+
+    private static bool isFirstTimePlaying = true;
+    public bool isInTutorial = false;
+    public TutorialController tutorialController;
+
     public static GameController Instance;
-    void Awake() {
+    void Awake() {     
         Time.timeScale = 1;
-        endGameCanvas.SetActive(false);
         menuCanvas.SetActive(false);
+        endGameCanvas.SetActive(false);
+        tutorialWelcomeCanvas.SetActive(false);
+        tutorialTimeline.SetActive(false);
+        attackTimeline.SetActive(false);
         isPaused = false;
         isFinished = false;
         Instance = this;
         gameTimer = 0;
         pauseScript = GetComponent<PauseScript>();
+        tutorialController = GetComponent<TutorialController>();
         soundController = GetComponent<GameAmbientSoundController>();
         uiController = GetComponent<UiController>();
+        allySpawner = GetComponent<AllySpawner>();
         uiController.UpdateCoinNumber(coinsAvailable);
         uiController.UpdateHealthPotionsNumber(healthPotionsAvailable);
+        tutorialCamera.GetComponent<AudioListener>().enabled = false;
+
+        if (isFirstTimePlaying) {
+            Time.timeScale = 0;
+            isPaused = true;
+            isFirstTimePlaying = false;
+            tutorialWelcomeCanvas.SetActive(true);
+            generalUICanvas.SetActive(false);
+        }
+        else {
+            soundController.PlayGameMusic();
+        }
+        
     }
 
 
@@ -78,6 +110,27 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         isFinished = false;
         isPaused = false;
+    }
+
+    public void SkipTutorial() {
+        Time.timeScale = 1;
+        isPaused = false;
+        isInTutorial = false;
+        tutorialWelcomeCanvas.SetActive(false);
+        generalUICanvas.SetActive(true);
+        soundController.PlayGameMusic();
+    }
+
+    public void PlayTutorial() {
+        mainCamera.GetComponent<AudioListener>().enabled = false;
+        tutorialCamera.GetComponent<AudioListener>().enabled = true;
+        isInTutorial = true;
+        isPaused = false;
+        tutorialWelcomeCanvas.SetActive(false);
+        Time.timeScale = 1;
+        tutorialTimeline.SetActive(true);
+        tutorialController.StartTutorial();
+        soundController.PlayTutorialMusic();
     }
 
     void UpdateTimer() {
@@ -136,5 +189,9 @@ public class GameController : MonoBehaviour
     public void AddHealthPotions(int ammount) {
         healthPotionsAvailable += ammount;
         uiController.UpdateHealthPotionsNumber(healthPotionsAvailable);
+    }
+
+    public void SpawnAllies(int count) {
+        allySpawner.SpawnAllies(count);
     }
 }

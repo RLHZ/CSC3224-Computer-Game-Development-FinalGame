@@ -12,7 +12,7 @@ public class GameAmbientSoundController : MonoBehaviour
         audioSource = GetComponents<AudioSource>();
         audioSource[1].Play();
         audioSource[2].Play();
-        audioSource[3].Play();
+        //audioSource[3].Play();
     }
 
     public void PlayGameLost() {
@@ -27,6 +27,16 @@ public class GameAmbientSoundController : MonoBehaviour
 
     public void PlaySingleSound(AudioClip clip) {
         audioSource[0].PlayOneShot(clip);
+    }
+
+    public void PlayTutorialMusic() {
+        audioSource[4].Play();
+        audioSource[3].Stop();
+    }
+
+    public void PlayGameMusic() {
+        audioSource[3].Play();
+        audioSource[4].Stop();
     }
 
 }

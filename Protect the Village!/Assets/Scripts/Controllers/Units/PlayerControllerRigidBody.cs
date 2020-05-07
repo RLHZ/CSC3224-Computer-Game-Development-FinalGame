@@ -47,18 +47,23 @@ public class PlayerControllerRigidBody : GoodCharacterController {
 
     void Update() {
         if (!GameController.isPaused && !GameController.isFinished) {
-            if (Input.GetMouseButtonDown(0)) {
+            //Debug.Log("111");
+            if (TutorialController.DoIfTutorial(TutorialController.Tutorial_State.Movement) && Input.GetMouseButtonDown(0)) {
+                Debug.Log("222");
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-
+                Debug.Log("Click");
                 if (Physics.Raycast(ray, out hit)) {
+                    if (GameController.Instance.isInTutorial)
+                        TutorialController.Instance.MovementDone();
+
                     motor.MoveToPoint(hit.point);
                     isEnemyTarget = false;
                     RemoveFocus();
                     target = null;
                 }
             }
-            if (Input.GetMouseButtonDown(1)) {
+            if (TutorialController.DoIfTutorial(TutorialController.Tutorial_State.Attack) && Input.GetMouseButtonDown(1)) {
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
@@ -139,6 +144,8 @@ public class PlayerControllerRigidBody : GoodCharacterController {
         audioSource.PlayOneShot(characterHit);
         GameController.Instance.uiController.UpdatePlayerHealth(stats.currentHealth, stats.maxHealth);
     }
+
+   
 
 }
 

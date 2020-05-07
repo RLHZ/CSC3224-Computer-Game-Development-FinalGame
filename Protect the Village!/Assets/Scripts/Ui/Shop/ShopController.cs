@@ -11,25 +11,38 @@ public class ShopController : MonoBehaviour
 
     public PlayerStats playerStats;
 
+    public int maxArmourAvailable = 9;
+    public int maxAttackAvailable = 23;
+
     public int potionCost;
     public int armourCost;
     public int attackCost;
+    public int allyCost;
     int totalCost;
 
     public Text costSummary;
     public Text potionCost_text;
     public Text armourCost_text;
     public Text attackCost_text;
+    public Text allyCost_text;
 
     private int potionQty;
     private int armourQty;
     private int attackQty;
+    private int allyQty;
 
     public Text potionQtyText;
     public Text armourQtyText;
     public Text attackQtyText;
+    public Text allyQtyText;
 
-    public enum BuyableItems { Potion, Armour, Attack}
+    public Text armourLeftText;
+    public Text attackLeftText;
+
+    private int totalArmourBought;
+    private int totalAttackBought;
+
+    public enum BuyableItems { Potion, Armour, Attack, Ally}
 
     public static ShopController Instance;
 
@@ -43,7 +56,8 @@ public class ShopController : MonoBehaviour
         warning.SetActive(false);
         potionCost_text.text = potionCost.ToString();
         armourCost_text.text = armourCost.ToString();
-        attackCost_text.text = attackCost.ToString();    
+        attackCost_text.text = attackCost.ToString();
+        allyCost_text.text = allyCost.ToString();
     }
 
     // Update is called once per frame
@@ -69,6 +83,7 @@ public class ShopController : MonoBehaviour
         potionQty = 0;
         armourQty = 0;
         attackQty = 0;
+        allyQty = 0;
         totalCost = 0;
         SetQuantitiesTexts();
     }
@@ -96,10 +111,15 @@ public class ShopController : MonoBehaviour
                 potionQty++;
                 break;
             case BuyableItems.Armour:
-                armourQty++;
+                if(totalArmourBought + armourQty + 1 <= maxArmourAvailable)
+                    armourQty++;
                 break;
             case BuyableItems.Attack:
-                attackQty++;
+                if (totalAttackBought + attackQty + 1 <= maxAttackAvailable)
+                    attackQty++;
+                break;
+            case BuyableItems.Ally:
+                allyQty++;
                 break;
         }
         warning.SetActive(false);
@@ -118,6 +138,9 @@ public class ShopController : MonoBehaviour
             case BuyableItems.Attack:
                 if (attackQty > 0) attackQty--;
                 break;
+            case BuyableItems.Ally:
+                if (allyQty > 0) allyQty--;
+                break;
         }
         warning.SetActive(false);
         SetQuantitiesTexts();
@@ -128,11 +151,15 @@ public class ShopController : MonoBehaviour
         potionQtyText.text = potionQty.ToString();
         armourQtyText.text = armourQty.ToString();
         attackQtyText.text = attackQty.ToString();
+        allyQtyText.text = allyQty.ToString();
+
+        armourLeftText.text = "(" + (maxArmourAvailable - armourQty - totalArmourBought) + " Left)";
+        attackLeftText.text = "(" + (maxAttackAvailable - attackQty - totalAttackBought) + " Left)";
     }
 
     private void CalculateTotal() {
         int coinsAvailable = GameController.Instance.coinsAvailable;
-        totalCost = potionQty * potionCost + attackQty * attackCost + armourQty * armourCost;
+        totalCost = potionQty * potionCost + attackQty * attackCost + armourQty * armourCost + allyQty * allyCost;
         int coinsLeft = coinsAvailable - totalCost;
 
         costSummary.text = string.Format("{0}\n{1}\n{2}", coinsAvailable, totalCost, coinsLeft);
@@ -148,6 +175,14 @@ public class ShopController : MonoBehaviour
             playerStats.IncreaseArmour(armourQty);
             playerStats.IncreaseAttack(attackQty * 2);
             GameController.Instance.AddHealthPotions(potionQty);
+
+            if (allyQty > 0)
+                GameController.Instance.SpawnAllies(allyQty);
+
+            //Spawn x number of enemies 
+
+            totalArmourBought += armourQty;
+            totalAttackBought += attackQty;
 
             ResetQty();
             CalculateTotal();

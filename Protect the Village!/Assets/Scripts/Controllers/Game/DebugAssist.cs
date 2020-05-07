@@ -186,4 +186,14 @@ public class DebugAssist : MonoBehaviour
 
         rollingText.text = rollingValue;
     }
+
+    public void MakeAllImmune() {
+        building1Stats.isImmune = true;
+        building2Stats.isImmune = true;
+        building3Stats.isImmune = true;
+        building4Stats.isImmune = true;
+        building5Stats.isImmune = true;
+        building6Stats.isImmune = true;
+        playerStats.isImmune = true;
+    }
 }

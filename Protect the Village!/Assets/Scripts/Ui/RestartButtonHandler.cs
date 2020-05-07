@@ -32,4 +32,12 @@ public class RestartButtonHandler : MonoBehaviour
         #endif
     }
 
+
+    public void SkipTutorial() {
+        GameController.Instance.SkipTutorial();
+    }
+
+    public void PlayTutorial() {
+        GameController.Instance.PlayTutorial();
+    }
 }
