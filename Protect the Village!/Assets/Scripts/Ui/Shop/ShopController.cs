@@ -77,9 +77,7 @@ public class ShopController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Escape) && isShopOpen) {
-            canvas.SetActive(false);
-            warning.SetActive(false);
-            isShopOpen = false;
+            CloseShopWindow();
         }   
     }
 

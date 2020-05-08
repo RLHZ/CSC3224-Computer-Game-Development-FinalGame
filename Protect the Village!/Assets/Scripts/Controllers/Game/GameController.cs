@@ -94,11 +94,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Escape) && !isInTutorial && isChoiceMade) {
             pauseScript.PauseGame();
         }
 
-        if (gameTimer >= gameDuration && !isFinished)
+        if (gameTimer >= gameDuration && !isFinished && !isInTutorial && isChoiceMade)
             WinGame();
 
         if (!isPaused && !isFinished)
