@@ -4141,7 +4141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 721146816}
-  duration: 0.1
+  duration: 0.2
 --- !u!1 &151310539 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1740273473050372, guid: 63ce2b31e16acab4d8a41f884c36333c,
@@ -15998,6 +15998,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 721146817}
+  - component: {fileID: 721146818}
   m_Layer: 5
   m_Name: Red Flash
   m_TagString: Untagged
@@ -16020,6 +16021,18 @@ Transform:
   m_Father: {fileID: 943980128}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!225 &721146818
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721146816}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &722131124
 GameObject:
   m_ObjectHideFlags: 0
