@@ -2803,7 +2803,7 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "You can use the coins to buy more  potions and other items in the \"Shop\".
-    \n                                     Press TAB  to open the shop."
+    \n                             Press TAB  to open the shop."
 --- !u!222 &129876990
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4396,7 +4396,7 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "You can detach the camera from the player and inspect the map by using  
-    W,A,S,D.\nW = forwards, S=backwards, A= left, \nD = right.   \n                                             
+    W,A,S,D.\nW = forwards, S=backwards, A= left, \nD = right.   \n                                  
     Try all of them to continue."
 --- !u!222 &162417702
 CanvasRenderer:
@@ -6928,11 +6928,11 @@ MonoBehaviour:
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "Pivot the camera using Q and E.\n                                              
-    Pivot the camera to continue"
+  m_Text: "Pivot the camera using Q and E.\n                                        
+    Pivot the camera to continue."
 --- !u!222 &291788844
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12598,8 +12598,8 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "Right click on an enemy to automatically go towards it and engage in combat
-    with it.               \n                                      Kill both enemies
-    to continue."
+    with it.               \n                               Kill both enemies to
+    continue."
 --- !u!222 &576086917
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -21377,7 +21377,7 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "Spend your coins in the shop to upgrade your armour, increase your attack,
-    buy more healing potions and recruit allies.\n                                                    
+    buy more healing potions and recruit allies.\n                                             
     Close the shop to continue."
 --- !u!222 &906453749
 CanvasRenderer:
