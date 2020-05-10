@@ -1,5 +1,5 @@
 # Protect the Village!
-##### CSC3224 Computer Game Development - Prototype
+##### CSC3224 Computer Game Development - Final Game
 
 ##### Gameplay:
 The map has 6 buildings, and a series of enemies will try to destroy them.
@@ -8,24 +8,25 @@ waves of enemies.
 
 The spawned enemies will target a building, but if the player is nearby, they'll target the player.
 ##### How to Play:
-Movement:
+Movement: Left-Click on a point in the map and the character will move there
+
+Attack: Right-Click on an enemy, and the player will automatically go towards it and engage in combat against it.
+
+Camera Movement:
 ```sh
-	"W": Forward
-	"S": Backwards
-	"A": Left
-	"D": Right
+	"W": Detach camera from player and move it forwards
+	"S": Detach camera from player and move it backwards
+	"A": Detach camera from player and move it to the left
+	"D": Detach camera from player and move it to the right
+	"Q": Pivot the camera counter-clockwise
+	"E": Pivot the camera clockwise 
+	"F": Attach the camera to the player again so it will follow it.
+
 ```			
-Rotation and look around:
-```sh
-    	"Move the mouse in the direction where you want the player to face."
-```	
-Attack:
-```sh
-    	"Left mouse click" to attack.
-```	
+
 Heal:
 ```sh
-    	"Q": Use a potion (Only if there are potions stored and if the health is not already at its maximum level)
+    	"G": Use a potion (I've any available and health is not at its maximum level)
 ```	
 Buy Items:
 ```sh
@@ -38,6 +39,23 @@ Menu:
 	Press "Restart Game": Restarts the Game.
 	Press "Quit Game": Ends the Game.
 ```
+
+Shop items:
+```sh
+	- Health Potions: They provide the same effect as potions spawned sometimes after killing an enemy.
+			  They add +30 health to the character's current health, or the amount left until
+			  the max health if the health is above 70.
+
+	- Armour: Each piece of armour bought reduces the damage received from the enemies by 1 point. There's a 
+		  maximum of armour that can be bought.
+
+	- Attack: Each piece of attack bought increases the damage dealt to enemies by 2 points. There's a 
+		  maximum of attack that can be bought.
+
+	- Allies: Buying an ally instantly spawns a friendly character that will target enemies and engage in
+		  combat with them. Only two allies can be alive in the map at any time of the game.
+```
+		  
 ##### Developer tools:
 When toggling the Dev mode, we get insights like the number of enemies in the scene and that will be spawned in the current wave, aswell as information about the performance.
 	
