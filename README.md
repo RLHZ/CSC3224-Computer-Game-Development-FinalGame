@@ -1,5 +1,6 @@
 # Protect the Village!
-##### CSC3224 Computer Game Development - Final Game
+##### CSC3224 Computer Game Development - Final Game 
+https://rlhz.github.io/CSC3224-Computer-Game-Development-FinalGame/?fbclid=IwAR1Waq8nrQGZcuGqEXL15OfZzGWfncCtD3RchKxVJpskFG19K65oSLch9xQ
 
 ##### Gameplay:
 The map has 6 buildings, and a series of enemies will try to destroy them.
